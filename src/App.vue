@@ -1,28 +1,37 @@
 <template>
+  
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    
+    <login v-if="page == 1"/>
+    <registro v-if="page == 2"/>
+    <normal v-if="page == 3"/>
+    <ti v-if="page == 4"/>
+    <gerente v-if="page == 5"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import login from './components/login.vue'
+import registro from './components/registro.vue'
+import normal from './components/usuarioNormal.vue'
+import ti from './components/IT.vue'
+import gerente from './components/gerente.vue'
+
+
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    login, registro, normal, ti, gerente
+  },
+  computed:{
+    page(){
+      return this.$store.getters.page;
+    }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
