@@ -4,21 +4,30 @@
     <v-div class="draggable centerh_mov" style="top: 130px; width: 982px; height: 327px; left: 3px;">
         <table class="ui celled table draggable" style="top: 1px; left: 1px;">
             <thead>
-                <tr class="mg">      
-                    <th>Tarea       
+                <tr class="mg">  
+                    <th>Folio       
                     </th>
                     <th>Status
                     </th>
+                    <th>Prioridad
+                    </th>
+                    <th>Razon
+                    </th>
                     <th>Quien Atiende
+                    </th>
+                    <th>Ver Comentarios
+                    </th>
+                    <th>Ver Documento
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="solicitud in solicitudes" v-bind:key="solicitud">
-                    <th>{{ solicitud.Tarea }}</th>
-                    <th>{{ solicitud.estatus }}</th>
+                <tr v-for="solicitud in loadsolicitudes" v-bind:key="solicitud">
+                    <th>{{ solicitud._id}}</th>
+                    <th>{{ solicitud.Prioridad }}</th>
+                    <th>{{ solicitud.Razon }}</th>
                     <th>{{ solicitud.UsuarioIT }}</th>
-                    <th>{{ solicitud.Total }}</th>
+                    
                 </tr>
             </tbody>
       </table>
@@ -32,34 +41,39 @@
             <v-div class="form-group draggable input left_mov" style="top: 18px;">  
                 <label for="comment">Comentario:
                 </label>
-                <textarea data-validate="NNNN[]N[]NNN" style="width:100%;height:100%;" class="form-control" id="comment">        
+                <textarea v-model="razon" data-validate="NNNN[]N[]NNN" style="width:100%;height:100%;" class="form-control" id="comment">        
                 </textarea>
             </v-div>
-            <input type="file" @change="previewImage" >
+            <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
             
             <v-div class="dropdown draggable" style="width: 173px; top: 48.6281px; left: 809.296px; height: 40px;">
                 <button class="btn btn-primary dropdown-toggle mg right_mov" type="button" data-toggle="dropdown">Prioridad
                     <span class="caret">
                     </span>
                 </button>
-                <ul class="dropdown-menu">
-                    <li class="dg_menu">
-                        <a href="#">Baja
-                        </a>
-                        <a href="#">Media
-                        </a>
-                        <a href="#">Alta
-                        </a>
-                    </li>
-                </ul>
+                <br/>
             </v-div>
         </v-div> 
         <v-div class="draggable centerh_mov" style="top: 732px; width: 232px; height: 86px; left: 12px;">
-            <button type="button" class="btn btn-info draggable centerh_mov" style="top: 0px;">Guardar y enviar solicitud
+            <button v-on:click="createSolicitud" type="button" class="btn btn-info draggable centerh_mov" style="top: 0px;">Guardar y enviar solicitud
             </button>
         </v-div>
+        <ul class="dropdown-menu">
+            <li class="dg_menu">
+                <a href="#">Baja
+                </a>
+                <a href="#">Media
+                </a>
+                <a href="#">Alta
+                </a>
+            </li>
+        </ul>
     </div>
 </template>
+
+<script>
+
+</script>
 
 <script>
 import axios from 'axios';
@@ -69,11 +83,15 @@ export default {
         this.getData();
     },
     data:{
-        imageData: ""
+        imageData: "",
+        razon: "",
     }, 
     computed:{
-
-    },
+        loadsolicitudes(){
+            console.warn(this.$store.getters.solicitudes);
+            return this.$store.getters.solicitudes.solicitudes;
+        }
+    },  
     methods:{
         getData(){
             var user = this.$store.getters.user;
@@ -82,52 +100,55 @@ export default {
             console.log(user.Id);
             setTimeout(() => {
                 axios.get('https://cors-anywhere.herokuapp.com/https://shrouded-brushlands-43721.herokuapp.com/api/commonUser/getMySolicitudes/' + user.Id, config).then(response => {
-                      //this.$store.commit('changes', JSON.stringify(response.data));
-                      alert(JSON.stringify(response));
-                      console.log("Data Loaded");
+                      alert(JSON.stringify(response)); 
+                      this.$store.commit('solicitudes', response.data);
                       //4 o 3 dependiendo si es vendedor o cliente, pero aun en la api no nos mandan el tipo de usuario
                     }).catch(e => {
-                      this.$swal('Error al cargar datos', 'Verifique su conexion a internet', 'error');
+                        this.$swal('Error al cargar datos', 'Verifique su conexion a internet', 'error');
                     })
                 },
                 300
             );
         }, 
         createSolicitud(){
+            var user = this.$store.getters.user;
+            var config = this.$store.getters.auth;
+            var form_data =  new FormData();
+            console.warn(this.imageData);
             var solicitud = {
-                "idUsuario": "",
-                "fechaCreacion": "",
-                "razon": "",
-                "prioridad": "",
+                "idUsuario": user.Id,
+                "fechaCreacion": new Date().toJSON(),
+                "razon": this.razon,
+                "prioridad": 2,
+                "fichero": this.imageData,
             };
+
+            form_data.append("idUsuario", user.Id);
+            form_data.append("fechaCreacion", new Date().toJSON());
+            form_data.append("razon", this.razon);
+            form_data.append("prioridad", 2);
+            form_data.append("fichero", this.imageData);
+
+            setTimeout(() => {
+                axios.post('https://cors-anywhere.herokuapp.com/https://shrouded-brushlands-43721.herokuapp.com/api/commonUser/sendSolicitud', form_data ,config).then(response => {
+                      //this.$store.commit('changes', JSON.stringify(response.data));
+                      alert(JSON.stringify(response));
+                      console.log("Data Loaded");
+                      //4 o 3 dependiendo si es vendedor o cliente, pero aun en la api no nos mandan el tipo de usuario
+                    }).catch(e => {
+                      this.$swal('Error al crear solicitud', 'Verifique su conexion a internet', 'error');
+                    })
+                },
+                300
+            );
         },
-        previewImage: function(event) {
-            var fileTypes = ['jpg', 'pdf', 'png'];
-            // Reference to the DOM input element
-            var input = event.target;
-            // Ensure that you have a file before attempting to read it
-            if (input.files && input.files[0]) {
-                var extension = input.files[0].name.split('.').pop().toLowerCase(),  //file extension from input file
-                var isSuccess = fileTypes.indexOf(extension) > -1;
-                // create a new FileReader to read this image and convert to base64 format
-                if(isSuccess){
-                    var reader = new FileReader();
-                // Define a callback function to run, when FileReader finishes its job
-                    reader.onload = (e) => {
-                    // Note: arrow function used here, so that "this.imageData" refers to the imageData of Vue component
-                    // Read image as base64 and set to imageData
-                        this.imageData = e.target.result;
-                        console.log(this.imageData);
-                    }
-                // Start the reader job - read file as a data url (base64 format)
-                    reader.readAsDataURL(input.files[0]);
-                }
-                
-            }
+        handleFileUpload(){
+            this.imageData = this.$refs.file.files[0];
         }
     }
 
 }
+        
 </script>
 
 <style>

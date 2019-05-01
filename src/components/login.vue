@@ -50,15 +50,22 @@ import sha256 from 'sha256';
             var  self = this;
             var objUser = {
                 "email": this.name,
-                "contrasena": sha256(this.password),
+                "contrasena": this.password,
             };
-            console.warn(objUser);
+            
             
             setTimeout(() => {
+              console.warn(objUser);
                 axios.post('https://cors-anywhere.herokuapp.com/https://shrouded-brushlands-43721.herokuapp.com/api/login', objUser).then(response => {
                     //this.$store.commit('changes', JSON.stringify(response.data));
                     alert(JSON.stringify(response.data.token));
-                    var config = { "headers": { "Authorization": 'Bearer ' + response.data.token }}
+                    var config = { 
+                      "headers": { 
+                        "Authorization": 'Bearer ' + response.data.token,
+                        'Content-Type': 'multipart/form-data',
+                        'Access-Control-Allow-Origin': '*'
+                      }
+                    }
                     var user = atob(response.data.token.split('.')[1]);
                     var user = JSON.parse(user);
                     this.$store.commit('auth', config);
@@ -78,7 +85,7 @@ import sha256 from 'sha256';
                     }
                    
                 }).catch(e => {
-                    console.warn(e);
+                    this.$swal('Error de Inicio de Sesión', 'Verifica tu email y tu contraseña', 'error');
                 })
             },
             300

@@ -74,7 +74,7 @@ import sha256 from 'sha256';
                   var objUser = {
                   "nombre": this.name,
                   "apellidos": this.lastname,
-                  "contrasena": sha256(this.password),
+                  "contrasena": this.password,
                   "email": this.email,
                 };
                 console.warn(objUser);

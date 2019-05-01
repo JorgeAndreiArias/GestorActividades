@@ -8,6 +8,7 @@ export const store = new Vuex.Store({
         page: 1,
         user: {},
         auth: {},
+        solicitudes: []
     },
     mutations: {
         change(state, page) {
@@ -18,11 +19,15 @@ export const store = new Vuex.Store({
         },
         auth(state, auth){
             state.auth = auth
+        },
+        solicitudes(state, solicitudes){
+            state.solicitudes =  solicitudes
         }
     },
     getters: {
         page: state => state.page,
         user: state => state.user,
         auth: state => state.auth,
+        solicitudes: state => state.solicitudes,
     }
 })
