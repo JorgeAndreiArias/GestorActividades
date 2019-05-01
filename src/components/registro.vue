@@ -83,6 +83,7 @@ import sha256 from 'sha256';
                       //this.$store.commit('changes', JSON.stringify(response.data));
                       alert(JSON.stringify(response));
                       this.$swal('Registro Correcto', 'Activa tu cuenta con tu correo', 'success');
+                      this.$store.commit('change', 1);
                       //4 o 3 dependiendo si es vendedor o cliente, pero aun en la api no nos mandan el tipo de usuario
                   }).catch(e => {
                       this.$swal('Error de Registro', 'No se pudo registrar el usuario', 'error');

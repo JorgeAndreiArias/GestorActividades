@@ -6,18 +6,23 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
     state: {
         page: 1,
-        session: null
+        user: {},
+        auth: {},
     },
     mutations: {
         change(state, page) {
             state.page = page;
         }, 
-        changes(state, session){
-            state.session = session;
+        user(state, user){
+            state.user = user;
+        },
+        auth(state, auth){
+            state.auth = auth
         }
     },
     getters: {
         page: state => state.page,
-        session: state => state.session
+        user: state => state.user,
+        auth: state => state.auth,
     }
 })

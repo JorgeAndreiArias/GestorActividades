@@ -58,8 +58,11 @@ import sha256 from 'sha256';
                 axios.post('https://cors-anywhere.herokuapp.com/https://shrouded-brushlands-43721.herokuapp.com/api/login', objUser).then(response => {
                     //this.$store.commit('changes', JSON.stringify(response.data));
                     alert(JSON.stringify(response.data.token));
+                    var config = { "headers": { "Authorization": 'Bearer ' + response.data.token }}
                     var user = atob(response.data.token.split('.')[1]);
-                    user = JSON.parse(user);
+                    var user = JSON.parse(user);
+                    this.$store.commit('auth', config);
+                    this.$store.commit('user', user);
                     console.log(user);
                     console.log(user.Tipo)
                     switch(user.Tipo){
@@ -89,7 +92,7 @@ import sha256 from 'sha256';
               if(this.name != "" && this.name != null){
                 var objUser = {
                 "email": this.name,
-              };
+                };
               setTimeout(() => {
                 axios.post('https://cors-anywhere.herokuapp.com/https://shrouded-brushlands-43721.herokuapp.com//api/passwordRecovery', objUser).then(response => {
                     //this.$store.commit('changes', JSON.stringify(response.data));
