@@ -22,7 +22,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="solicitud in loadsolicitudes" v-bind:key="solicitud">
+                <tr v-for="(solicitud, index) in loadsolicitudes" v-bind:key="solicitud">
                     <th>{{ solicitud._id}}</th>
                     <th> 
                         <label v-if="solicitud.FechaCreacion != null && solicitud.FechaEnProceso == null">Pendiente</label>
@@ -35,19 +35,24 @@
                         <label v-if="solicitud.Prioridad == 0">Baja</label>
                     </th>
                     <th>{{ solicitud.Razon }}</th>
-                    <th>{{ solicitud.UsuarioIT }}</th>
+                    <th>
+                        <label v-if="solicitud.UsuarioIT.IdUsuarioIT == -1"> Nadie Atiende</label>
+                        <label v-if="solicitud.UsuarioIT.IdUsuarioIT != -1">{{ olicitud.UsuarioIT.NombreCompleto }}</label>
+                    </th>
                     <th>
                         <input  v-if="solicitud.ComentariosIT.length == 0" type="text" value="No existen comentarios">
-                        <input  v-if="solicitud.ComentariosIT.length != 0" type="button" value="Mostrar Comentarios">
+                        <input  v-if="solicitud.ComentariosIT.length != 0" type="button" v-on:click="showComentarios(index)" value="Mostrar Comentarios">
                     </th>
                     <th>
                         <input  v-if="solicitud.RutaDocumento == null" type="text" value="No existe archivo">
                         <input v-on:click="ShowDoc(solicitud.RutaDocumento)"  v-if="solicitud.RutaDocumento != null" type="button" value="Mostrar archivo">
-                    </th>
-                    
+                    </th> 
                 </tr>
             </tbody>
       </table>
+      <div v-for="comentario in loadcomentarios" v-bind:key="comentario">
+          <textarea cols="30" rows="10"></textarea>
+      </div>
     </v-div> 
      
     <v-div class="draggable centerh_mov" style="top: 496px; width: 460px; height: 51px; left: 2px;">
@@ -104,13 +109,25 @@ export default {
         imageData: "",
         razon: "",
         status: "",
-        priority: 4
+        priority: 4,
+        comentarios: [],
     }, 
     computed:{
         loadsolicitudes(){
             console.warn(this.$store.getters.solicitudes);
             return this.$store.getters.solicitudes;
         },
+        comentarios: {
+            get: function () {
+                return this.comentarios;
+            },
+            set: function (v) {
+                this.comentarios = v;
+            }
+        },
+        loadcomentarios(){
+            return self.comentarios
+        }
     },  
     methods:{
         getData(){
@@ -120,6 +137,7 @@ export default {
                 axios.get('https://cors-anywhere.herokuapp.com/https://shrouded-brushlands-43721.herokuapp.com/api/commonUser/getMySolicitudes/' + user.Id, config).then(response => {
                       alert(JSON.stringify(response)); 
                       var solicitudes = response.data.solicitudes;
+
                       this.$store.commit('solicitudes', solicitudes);
                       //4 o 3 dependiendo si es vendedor o cliente, pero aun en la api no nos mandan el tipo de usuario
                     }).catch(e => {
@@ -132,7 +150,12 @@ export default {
         ShowDoc(url){
             window.open(url);
         },
-
+        showComentarios(id){
+            var soli =  this.$store.getters.solicitudes;
+            self = this;
+            self.comentarios = soli.ComentariosIT;
+            console.log(self.comentarios);
+        },
         createSolicitud(){
             var user = this.$store.getters.user;
             var config = this.$store.getters.auth;
@@ -147,6 +170,7 @@ export default {
             };
             if(this.razon != null && this.priority != 4 ){
                 form_data.append("idUsuario", user.Id);
+                form_data.append("nombreCompleto", user.Nombre + " " + user.Apellidos);
                 form_data.append("fechaCreacion", new Date().toJSON());
                 form_data.append("razon", this.razon);
                 form_data.append("prioridad", this.priority);

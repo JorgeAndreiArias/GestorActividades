@@ -68,18 +68,22 @@ import sha256 from 'sha256';
                     }
                     var user = atob(response.data.token.split('.')[1]);
                     var user = JSON.parse(user);
+
                     this.$store.commit('auth', config);
                     this.$store.commit('user', user);
                     console.log(user);
                     console.log(user.Tipo)
                     switch(user.Tipo){
                       case 0:
+                      //Usuario Comun
                         this.$store.commit('change', 3);
                         break;
                       case 1: 
+                      //Usuario TI
                         this.$store.commit('change', 4);
                         break;
                       case 3:
+                      //Gerente
                         this.$store.commit('change', 5);
                         break;
                     }

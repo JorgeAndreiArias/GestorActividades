@@ -5,8 +5,8 @@
     <login v-if="page == 1"/>
     <registro v-if="page == 2"/>
     <normal v-if="page == 3"/>
-    <ti />
-    <gerente />
+    <ti v-if="page == 4" />
+    <gerente v-if="page == 5"/>
   </div>
 </template>
 
