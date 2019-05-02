@@ -50,9 +50,12 @@
                 </tr>
             </tbody>
       </table>
-      <div v-for="comentario in loadcomentarios" v-bind:key="comentario">
-          <textarea cols="30" rows="10"></textarea>
+      <div v-if="loadcomentarios != null">
+          <div v-for="comentario in loadcomentarios" v-bind:key="comentario">
+            <textarea :name="comentario" cols="30" rows="10"></textarea>
+        </div>
       </div>
+      
     </v-div> 
      
     <v-div class="draggable centerh_mov" style="top: 496px; width: 460px; height: 51px; left: 2px;">
@@ -74,15 +77,9 @@
                 <option value="1">Media</option>
                 <option value="2">Alta</option>
             </select>
-            <p>{{ priority }}</p>
-            <v-div class="dropdown draggable" style="width: 173px; top: 48.6281px; left: 809.296px; height: 40px;">
-                <button class="btn btn-primary dropdown-toggle mg right_mov" type="button" data-toggle="dropdown">Prioridad
-                    <span class="caret">
-                    </span>
-                </button>
-                <br/>
-            </v-div>
+            
         </v-div> 
+        <br/>
         <v-div class="draggable centerh_mov" style="top: 732px; width: 232px; height: 86px; left: 12px;">
             <button v-on:click="createSolicitud" type="button" class="btn btn-info draggable centerh_mov" style="top: 0px;">Guardar y enviar solicitud
             </button>
@@ -114,7 +111,6 @@ export default {
     }, 
     computed:{
         loadsolicitudes(){
-            console.warn(this.$store.getters.solicitudes);
             return this.$store.getters.solicitudes;
         },
         comentarios: {
@@ -135,9 +131,7 @@ export default {
             var config = this.$store.getters.auth;
             setTimeout(() => {
                 axios.get('https://cors-anywhere.herokuapp.com/https://shrouded-brushlands-43721.herokuapp.com/api/commonUser/getMySolicitudes/' + user.Id, config).then(response => {
-                      alert(JSON.stringify(response)); 
                       var solicitudes = response.data.solicitudes;
-
                       this.$store.commit('solicitudes', solicitudes);
                       //4 o 3 dependiendo si es vendedor o cliente, pero aun en la api no nos mandan el tipo de usuario
                     }).catch(e => {
@@ -154,7 +148,6 @@ export default {
             var soli =  this.$store.getters.solicitudes;
             self = this;
             self.comentarios = soli.ComentariosIT;
-            console.log(self.comentarios);
         },
         createSolicitud(){
             var user = this.$store.getters.user;
@@ -168,31 +161,35 @@ export default {
                 "prioridad": 2,
                 "fichero": this.imageData != null ? this.imageData : "",
             };
-            if(this.razon != null && this.priority != 4 ){
-                form_data.append("idUsuario", user.Id);
-                form_data.append("nombreCompleto", user.Nombre + " " + user.Apellidos);
-                form_data.append("fechaCreacion", new Date().toJSON());
-                form_data.append("razon", this.razon);
-                form_data.append("prioridad", this.priority);
-                form_data.append("fichero", this.imageData != null ? this.imageData : "");
+            if(this.razon != null){
+                if(this.priority != undefined){
+                    form_data.append("idUsuario", user.Id);
+                    form_data.append("nombreCompleto", user.Nombre + " " + user.Apellidos);
+                    form_data.append("fechaCreacion", new Date().toJSON());
+                    form_data.append("razon", this.razon);
+                    form_data.append("prioridad", this.priority);
+                    form_data.append("fichero", this.imageData != null ? this.imageData : "");
 
-                setTimeout(() => {
-                    axios.post('https://cors-anywhere.herokuapp.com/https://shrouded-brushlands-43721.herokuapp.com/api/commonUser/sendSolicitud', form_data ,config).then(response => {
-                        //this.$store.commit('changes', JSON.stringify(response.data));
-                        this.$swal('Solicitud Enviada', 'Su solicitud será atendida en breve', 'success');
-                        this.razon = "";
-                        //4 o 3 dependiendo si es vendedor o cliente, pero aun en la api no nos mandan el tipo de usuario
-                        }).catch(e => {
-                        this.$swal('Error al crear solicitud', 'Verifique su conexion a internet', 'error');
-                        })
-                    },
-                    300
-                );
-                this.getData();
+                    setTimeout(() => {
+                        axios.post('https://cors-anywhere.herokuapp.com/https://shrouded-brushlands-43721.herokuapp.com/api/commonUser/sendSolicitud', form_data ,config).then(response => {
+                            //this.$store.commit('changes', JSON.stringify(response.data));
+                            this.$swal('Solicitud Enviada', 'Su solicitud será atendida en breve', 'success');
+                            this.razon = "";
+                            this.getData();
+                            //4 o 3 dependiendo si es vendedor o cliente, pero aun en la api no nos mandan el tipo de usuario
+                            }).catch(e => {
+                            this.$swal('Error al crear solicitud', 'Verifique su conexion a internet', 'error');
+                            })
+                        },
+                        300
+                    );
+                }else{
+                    this.$swal(' ', 'Seleccione el tipo de Prioridad', 'warning');
+                }
+                
             }else{
                     this.$swal(' ', 'Ingrese el motivo de su solicitud', 'warning');
-            }
-            
+            }            
         },
         handleFileUpload(){
             this.imageData = this.$refs.file.files[0];

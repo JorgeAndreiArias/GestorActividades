@@ -40,8 +40,24 @@ import sha256 from 'sha256';
              ExistSession() {
                 console.log("Running")
                 if(this.$cookies.isKey('UserAuth')){
-                     this.$store.commit('change', 3);
-                     console.warn("The Cookie  exist");
+                    this.$store.commit('auth', this.$cookies.get('Token'));
+                    console.log(this.$cookies.get('Token'));
+                    this.$store.commit('user', this.$cookies.get('UserAuth'));
+                    console.log(this.$cookies.get('UserAuth'));
+                     switch(this.$cookies.get('UserAuth').Tipo){
+                      case 0:
+                      //Usuario Comun
+                        this.$store.commit('change', 3);
+                        break;
+                      case 1: 
+                      //Usuario TI
+                        this.$store.commit('change', 4);
+                        break;
+                      case 2:
+                      //Gerente
+                        this.$store.commit('change', 5);
+                        break;
+                    }
                 }else{
                     console.warn("The Cookie doesnt exist");
                 }
@@ -52,8 +68,6 @@ import sha256 from 'sha256';
                 "email": this.name,
                 "contrasena": this.password,
             };
-            
-            
             setTimeout(() => {
               console.warn(objUser);
                 axios.post('https://cors-anywhere.herokuapp.com/https://shrouded-brushlands-43721.herokuapp.com/api/login', objUser).then(response => {
@@ -68,11 +82,17 @@ import sha256 from 'sha256';
                     }
                     var user = atob(response.data.token.split('.')[1]);
                     var user = JSON.parse(user);
-
+                    var cad = new Date(user.exp * 1000);//fecha que expira
+                    var date1 = Date.now();//fecha actual
+                    date1 = new Date(date1);//convertit formato fecha
+                    var diffTime = Math.abs(cad.getTime() - date1.getTime());//diferencia de tiempo
+                    diffTime = diffTime / 1000; //convertir a segundos
+                    var expires = Math.round(diffTime/60); //convertir a minutos
+                    console.log(expires);
                     this.$store.commit('auth', config);
                     this.$store.commit('user', user);
-                    console.log(user);
-                    console.log(user.Tipo)
+                    this.$cookies.set('UserAuth', user, expires + "MIN");
+                    this.$cookies.set('Token', config, expires + "MIN");
                     switch(user.Tipo){
                       case 0:
                       //Usuario Comun
@@ -82,7 +102,7 @@ import sha256 from 'sha256';
                       //Usuario TI
                         this.$store.commit('change', 4);
                         break;
-                      case 3:
+                      case 2:
                       //Gerente
                         this.$store.commit('change', 5);
                         break;
@@ -94,7 +114,6 @@ import sha256 from 'sha256';
             },
             300
             );
-            
             },
             signin(){
               this.$store.commit('change', 2);
