@@ -1,5 +1,5 @@
 <template>
-  <div id="app" style="height: 100%;">
+  <div id="app">
     <barra v-if="page != 1 && page != 2"/>
     <login v-if="page == 1"/>
     <registro v-if="page == 2"/>

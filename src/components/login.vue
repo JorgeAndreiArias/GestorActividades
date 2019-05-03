@@ -205,6 +205,7 @@ body {
   background-position: center !important;
   background-repeat: no-repeat !important;
   background-size: cover !important;
+  height: 100vh !important;
 }
 
 .container {

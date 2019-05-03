@@ -189,7 +189,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover !important;
-  
+  height: 100vh !important;
 }
 
 .container {
@@ -273,4 +273,5 @@ input:focus {
 .links a {
   margin-left: 4px;
 }
+
 </style>

@@ -1,9 +1,10 @@
 <template>
-  <div>
-    <div>
+    <div class="Background_Image">
+    <div class="card">
+      <div class="card-body">
         <h3>Tickets Mios</h3>
         <div id="Out_Table"> 
-          <table lass="table draggable table-striped table-dark">
+          <table class="table draggable table-striped table-dark" id="In_Table">
             <thead>
                 <tr class="mg">  
                     <th>Folio       
@@ -45,19 +46,19 @@
                         <label
                         v-if="solicitud.FechaEnProceso != null"
                         >{{ new Date(solicitud.FechaEnProceso).toLocaleDateString() }}</label>
-                        <input v-if="solicitud.FechaEnProceso == null" type="button" value="Asignar Fecha" v-on:click="setOption2(solicitud._id)">
+                        <input v-if="solicitud.FechaEnProceso == null" type="button" value="Asignar Fecha" class="btn btn_Fecha" v-on:click="setOption2(solicitud._id)">
                     </td>
                     <td>
                         <label v-if="solicitud.FechaTerminado != null" > {{ new Date(solicitud.FechaTerminado).toLocaleDateString()}} </label>
-                        <input v-if="solicitud.FechaTerminado == null" type="button" value="Asignar Fecha" v-on:click="setOption3(solicitud._id)">
+                        <input v-if="solicitud.FechaTerminado == null" type="button" value="Asignar Fecha" class="btn btn_Fecha" v-on:click="setOption3(solicitud._id)">
                     </td>
                     <th>
                         <label  v-if="solicitud.RutaDocumento == null">No existe archivo</label>
-                        <input v-on:click="ShowDoc(solicitud.RutaDocumento)"  v-if="solicitud.RutaDocumento != null" type="button" value="Mostrar archivo">
+                        <input v-on:click="ShowDoc(solicitud.RutaDocumento)"  v-if="solicitud.RutaDocumento != null" type="button" value="Mostrar archivo" class="btn btn_Documento">
                     </th> 
                     <th>
-                        <input  type="button" v-on:click="setOption1(solicitud._id)" value="Añadir Comentario"/>
-                        <input  type="button" v-on:click="showComentarios(solicitud.ComentariosIT)" value="Mostrar Comentarios">
+                        <input  type="button" v-on:click="setOption1(solicitud._id)" value="Añadir Comentario" class="btn btn_Add_Comentarios" />
+                        <input  type="button" v-on:click="showComentarios(solicitud.ComentariosIT)" value="Mostrar Comentarios" class="btn btn_Comentarios">
                     </th>
                 </tr>
             </tbody>
@@ -67,7 +68,7 @@
         <div id="tbl_solicitudes">
             <h3>Tickets Sin Procesar</h3>
        <div id="Out_Table"> 
-           <table lass="table draggable table-striped table-dark">
+           <table class="table draggable table-striped table-dark" id="In_Table">
             <thead>
                 <tr class="mg">  
                     <th>Folio       
@@ -103,10 +104,10 @@
                     </td>
                     <th>
                         <label  v-if="solicitud.RutaDocumento == null">No existe archivo</label>
-                        <input v-on:click="ShowDoc(solicitud.RutaDocumento)"  v-if="solicitud.RutaDocumento != null" type="button" value="Mostrar archivo">
+                        <input v-on:click="ShowDoc(solicitud.RutaDocumento)"  v-if="solicitud.RutaDocumento != null" type="button" value="Mostrar archivo" class="btn btn_Documento">
                     </th> 
                     <th>
-                        <input type="button" value="Asignarme Tarea" v-on:click="asignarSolicitud(solicitud._id)">
+                        <input type="button" value="Asignarme Tarea" v-on:click="asignarSolicitud(solicitud._id)" class="btn btn_Documento">
                     </th>
                 </tr>
             </tbody>
@@ -120,6 +121,7 @@
                <input type="button" value="Enviar Peticion" v-on:click="sendPost()">
            </div>
        </div>
+    </div>
     </div>
   </div>
 </template>
@@ -325,24 +327,157 @@ export default {
   }
 };
 </script>
-<style >
+<style scoped>
 html,
 body {
-  height: 100%;
-  font-family: arial;
-  font-weight: bold;
+  font-family: arial !important;
+  font-weight: bold !important;
 }
-.card {
-  height: 100%;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.6) !important;
-}
+
 h3 {
-  font-weight: bold;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+
+.card {
+  min-height: 100vh;
+  background-color: rgba(20, 20, 20, 0.8) !important;
+}
+
+.Background_Image {
+  background-image: url("https://www.10wallpaper.com/wallpaper/1920x1080/1711/Blue_abstract_gradient_Vector_HD_Wallpaper_1920x1080.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+  padding: 30px;
+}
+
+#divtxtIdSolicitud {
+  width: 100%;
+  height: 100px;
+  background-color: rgba(79, 79, 80, 0.8) !important;
   text-align: center;
+  vertical-align: middle;
+  padding: 10px;
+}
+
+#lbl_Reportes {
+  color: white;
+  font-size: 21px;
+  margin-top: 5vh;
+  margin-right: 15px;
+}
+
+#txtIdSolicitudes {
+  color: white;
+  font-size: 60px;
+}
+
+input {
+  background-color: #f5f5f5;
+  border-color: #f5f5f5;
+  color: black;
+}
+
+#txtIdVI_1 {
+  color: white;
+  width: 550px;
+}
+
+.input-group-prepend span {
+  background-color: #e0e0e0;
+  border: 0 !important;
+}
+.Label_Text {
+  margin-top: 0px;
+  color: white;
+  font-size: 25px;
+  margin-bottom: 0px;
+}
+
+.btn_Enviar_Datos {
+  background-color: #1976d2;
+  color: white;
+  width: 500px;
+  border: 0 !important;
+  font-weight: bold !important;
+}
+
+.btn_Enviar_Datos:hover {
+  background-color: #145faa;
   color: white;
 }
-#tblIdMade {
-   margin-bottom: 15%;
+
+#tbl_solicitudes {
+  margin-top: 10vh;
+}
+
+#Out_Table {
+  background-color: rgba(79, 79, 80, 0.8) !important;
+  padding: 30px;
+}
+
+#In_Table {
+  border: 0 !important;
+}
+
+#In_Table > thead {
+  background-color: rgba(25, 118, 210) !important;
+  color: white;
+}
+
+.btn_Documento {
+  background-color: #1976d2;
+  border: 0 !important;
+  color: white;
+  font-weight: bold !important;
+}
+
+.btn_Add_Comentarios {
+  background-color: #1976d2;
+  border: 0 !important;
+  color: white;
+  font-weight: bold !important;
+  margin-right: 10px;
+}
+
+.btn_Add_Comentarios:hover {
+  background-color: white;
+  color: black;
+}
+
+.btn_Fecha {
+  background-color: #1976d2;
+  border: 0 !important;
+  color: white;
+  font-weight: bold !important;
+}
+
+.btn_Fecha:hover {
+  background-color: white;
+  color: black;
+}
+
+.btn_Documento:hover {
+  background-color: white;
+  color: black;
+}
+
+.btn_Comentarios {
+  background-color: #1976d2;
+  border: 0 !important;
+  color: white;
+  font-weight: bold !important;
+}
+
+.btn_Comentarios:hover {
+  background-color: white;
+  color: black;
+}
+
+#btn_Cerrar {
+  width: 500px;
 }
 </style>
