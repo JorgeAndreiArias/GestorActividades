@@ -1,8 +1,8 @@
 <template>
-    <div>   
+    <div id="tbl_solicitudes">   
         <h1>Mis Solicitudes</h1>
-    <v-div class="draggable centerh_mov" style="top: 130px; width: 982px; height: 327px; left: 3px;">
-        <table class="ui celled table draggable" style="top: 1px; left: 1px;">
+    <v-div class="draggable centerh_mov" id="Out_Table">
+        <table class="table draggable table-striped table-dark" id="In_Table">
             <thead>
                 <tr class="mg">  
                     <th>Folio       
@@ -30,22 +30,22 @@
                         <label v-if="solicitud.FechaTerminado != null">Finalizado</label>
                     </th>
                     <th>
-                        <label v-if="solicitud.Prioridad == 2">Alta</label>
-                        <label v-if="solicitud.Prioridad == 1">Media</label>
-                        <label v-if="solicitud.Prioridad == 0">Baja</label>
+                        <label v-if="solicitud.Prioridad == 2" style="color: #b71c1c;">Alta</label>
+                        <label v-if="solicitud.Prioridad == 1" style="color: #F57F17;">Media</label>
+                        <label v-if="solicitud.Prioridad == 0" style="color: #2E7D32;">Baja</label>
                     </th>
                     <th>{{ solicitud.Razon }}</th>
                     <th>
                         <label v-if="solicitud.UsuarioIT.IdUsuarioIT == -1"> Nadie Atiende</label>
-                        <label v-if="solicitud.UsuarioIT.IdUsuarioIT != -1">{{ olicitud.UsuarioIT.NombreCompleto }}</label>
+                        <label v-if="solicitud.UsuarioIT.IdUsuarioIT != -1">{{ solicitud.UsuarioIT.NombreCompleto }}</label>
                     </th>
                     <th>
                         <label  v-if="solicitud.ComentariosIT.length == 0" >No hay Comentarios</label>
-                        <input  v-if="solicitud.ComentariosIT.length != 0" type="button" v-on:click="showComentarios(solicitud.ComentariosIT)" value="Mostrar Comentarios">
+                        <input  v-if="solicitud.ComentariosIT.length != 0" class="btn btn_Comentarios" type="button" v-on:click="showComentarios(solicitud.ComentariosIT)" value="Mostrar Comentarios">
                     </th>
                     <th>
                         <label  v-if="solicitud.RutaDocumento == null">No existe archivo</label>
-                        <input v-on:click="ShowDoc(solicitud.RutaDocumento)"  v-if="solicitud.RutaDocumento != null" type="button" value="Mostrar archivo">
+                        <input class="btn btn_Documento" v-on:click="ShowDoc(solicitud.RutaDocumento)"  v-if="solicitud.RutaDocumento != null" type="button" value="Mostrar archivo">
                     </th> 
                 </tr>
             </tbody>
@@ -65,7 +65,7 @@
         </span>
     </v-div> 
         <v-div class="draggable centerh_mov" style="top: 583.19px; width: 1026px; height: 108px; left: 62.0788px;">
-            <v-div class="form-group draggable input left_mov" style="top: 18px;">  
+            <v-div class="form-group draggable input centerh_mov" style="top: 18px;">  
                 <label for="comment">Comentario:
                 </label>
                 <textarea v-model="razon" data-validate="NNNN[]N[]NNN" style="width:100%;height:100%;" class="form-control" id="comment">        
@@ -138,8 +138,7 @@ export default {
             var config = this.$store.getters.auth;
             setTimeout(() => {
                 axios.get('https://cors-anywhere.herokuapp.com/https://shrouded-brushlands-43721.herokuapp.com/api/commonUser/getMySolicitudes/' + user.Id, config).then(response => {
-                      var solicitudes = response.data.solicitudes;
-                      this.$store.commit('solicitudes', solicitudes);
+                      this.$store.commit('solicitudes', response.data.solicitudes);
                       //4 o 3 dependiendo si es vendedor o cliente, pero aun en la api no nos mandan el tipo de usuario
                     }).catch(e => {
                         this.$swal('Error al cargar datos', 'Verifique su conexion a internet', 'error');
@@ -152,7 +151,7 @@ export default {
             window.open(url);
         },
         showComentarios(comentarios){
-            this.$store.commit('setComentarios', comentarios);
+            this.$store.commit('setComentario', comentarios);
             this.$store.commit('setModal', true);
         },
         createSolicitud(){
@@ -206,6 +205,128 @@ export default {
         
 </script>
 
-<style>
 
+<style >
+html,
+body {
+  font-family: arial !important;
+  font-weight: bold !important;
+}
+
+.card {
+  min-height: 100vh;
+  background-color: rgba(20, 20, 20, 0.8) !important;
+}
+
+.Background_Image {
+  background-image: url("https://www.linckard.com/wp-content/uploads/2017/12/fondo_polygon.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+  padding: 30px;
+}
+
+#divtxtIdSolicitud {
+  width: 100%;
+  height: 100px;
+  background-color: rgba(79, 79, 80, 0.8) !important;
+  text-align: center;
+  vertical-align: middle;
+  padding: 10px;
+}
+
+#lbl_Reportes {
+  color: white;
+  font-size: 21px;
+  margin-top: 5vh;
+  margin-right: 15px;
+}
+
+#txtIdSolicitudes {
+  color: white;
+  font-size: 60px;
+}
+
+input {
+  background-color: #f5f5f5;
+  border-color: #f5f5f5;
+  color: black;
+}
+
+#txtIdVI_1 {
+  color: white;
+  width: 550px;
+}
+
+.input-group-prepend span {
+  background-color: #e0e0e0;
+  border: 0 !important;
+}
+.Label_Text {
+  margin-top: 0px;
+  color: white;
+  font-size: 25px;
+  margin-bottom: 0px;
+}
+
+.btn_Enviar_Datos {
+  background-color: #1976d2;
+  color: white;
+  width: 500px;
+  border: 0 !important;
+  font-weight: bold !important;
+}
+
+.btn_Enviar_Datos:hover {
+  background-color: #145faa;
+  color: white;
+}
+
+#tbl_solicitudes {
+  margin-top: 10vh;
+}
+
+#Out_Table {
+  background-color: rgba(79, 79, 80, 0.8) !important;
+  padding: 30px;
+}
+
+#In_Table {
+  border: 0 !important;
+}
+
+#In_Table > thead {
+  background-color: rgba(25, 118, 210) !important;
+  color: white;
+}
+
+.btn_Documento {
+  background-color: #1976d2;
+  border: 0 !important;
+  color: white;
+  font-weight: bold !important;
+}
+
+.btn_Documento:hover {
+  background-color: white;
+  color: black;
+}
+
+.btn_Comentarios {
+  background-color: #1976d2;
+  border: 0 !important;
+  color: white;
+  font-weight: bold !important;
+}
+
+.btn_Comentarios:hover {
+  background-color: white;
+  color: black;
+}
+
+#btn_Cerrar {
+  width: 500px;
+}
 </style>
+

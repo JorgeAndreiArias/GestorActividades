@@ -9,6 +9,8 @@ export const store = new Vuex.Store({
         user: {},
         auth: {},
         solicitudes: [],
+        mias: [],
+        todas: [],
         showModal: false,
         comentarios: [],
     },
@@ -16,6 +18,12 @@ export const store = new Vuex.Store({
         change(state, page) {
             state.page = page;
         }, 
+        setMias(state, mias){
+            state.mias = mias;
+        },
+        setTodas(state, todas){
+            state.todas = todas;
+        },
         setModal(state, showModal){
             state.showModal = showModal;
         },
@@ -29,7 +37,7 @@ export const store = new Vuex.Store({
             state.solicitudes =  solicitudes
         },
         setComentario(state, comentarios){
-            state.comentarios = solicitudes
+            state.comentarios = comentarios
         }
     },
     getters: {
@@ -39,5 +47,7 @@ export const store = new Vuex.Store({
         solicitudes: state => state.solicitudes,
         getComentarios: state => state.comentarios,
         getModal: state => state.showModal,
+        getMias: state => state.mias,
+        getTodas: state => state.todas,
     }
 })

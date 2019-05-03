@@ -1,5 +1,6 @@
 <template>
   <div id="app" style="height: 100%;">
+    <barra v-if="page != 1 && page != 2"/>
     <login v-if="page == 1"/>
     <registro v-if="page == 2"/>
     <modal v-if="showModal"></modal>
@@ -16,11 +17,12 @@ import normal from './components/usuarioNormal.vue'
 import ti from './components/IT.vue'
 import gerente from './components/gerente.vue'
 import modal from './components/comentarios.vue'
+import barra from './components/barra.vue'
 
 export default {
   name: 'app',
   components: {
-    login, registro, normal, ti, gerente, modal
+    login, registro, normal, ti, gerente, modal, barra
   },
   computed:{
     page(){
