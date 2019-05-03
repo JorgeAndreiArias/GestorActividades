@@ -1,15 +1,61 @@
 <template>
+    <div class="Background_Image" >
     <div class="container">
-      <h1>Login</h1>
-        <form v-on:submit.prevent="Auth">
-            <input type="text" class="field" placeholder="Email" v-model="name">
-            <input type="text" class="field" placeholder="Password" v-model="password">
-            <input type="submit" class="btn" value="Login">
-            <input type="button" v-on:click="signin" class="btn" value="sign in" >
-            <a class="pass-link" v-on:click="Recover">Lost your password?</a>
-        </form>
-        
+      <div class="d-flex justify-content-center h-100">
+        <div class="card">
+          <div class="card-header">
+            <h3>Login</h3>
+          </div>
+          <div class="card-body">
+            <form v-on:submit.prevent="Auth">
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </div>
+                <input type="text" class="form-control" placeholder="Email" v-model="name">
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-key"></i>
+                  </span>
+                </div>
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="Password"
+                  v-model="password"
+                >
+              </div>
+              <div class="form-group">
+                <input
+                  id="btnIdLogin"
+                  type="submit"
+                  value="Login"
+                  class="btn float-right Class_Btn_Login"
+                >
+              </div>
+              <div class="form-group">
+                <button v-on:click="Recover" type="button" class="btn Class_Btn_Password">
+                  Forgot Your
+                  Password?
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-center links">
+              Don't have an account?
+              <a v-on:click="signin" href="#">Sign Up</a>
+            </div>
+          </div>
+          <div class="form-group"></div>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -144,69 +190,104 @@ import sha256 from 'sha256';
     }   
 </script>
 
-<style>
-    *{
-        box-sizing: border-box !important;
-      }
-      
-      .container {
-        margin: 20px auto !important;
-        padding: 10px !important;
-        width: 300px !important;
-        height: 320px !important;
-        background-color: #fff !important;
-        border-radius: 5px !important;
-      }
-      h1{
-        width: 70% !important;
-        color: #777 !important;
-        font-size: 32px !important;
-        margin: 28px auto !important;
-        margin-bottom: 20px !important;
-        text-align: center !important;
-        /*padding-top: 40px;*/
-      }
-      form{
-        /*padding: 15px;*/
-        text-align: center !important;
-      }
-      input{
-        padding: 12px 0 !important;
-        margin-bottom: 15px !important;
-        border-radius: 10px !important;
-        border: 2px solid transparent !important;
-        text-align: center !important;
-        width: 90% !important;
-        font-size: 16px !important;
-        transition: border .2s, background-color .2s !important;
-      }
-      form .field{
-        background-color: #ECF0F1 !important;
-      }
-      form .field:focus {
-        border: 2px solid #3498DB !important;
-      }
-      form .btn{
-        background-color: #3498DB !important;
-        color: #fff !important;
-        line-height: 10px !important;
-        cursor: pointer !important;
-      }
-      form .btn:hover,
-      form .btn:active {
-        background-color: #1F78B4 !important;
-        border: 2px solid #1F78B4 !important;
-      }
-      
-      .pass-link{
-        text-align: center !important;
-        align-content: center !important;
-      }
-      .pass-link a:link,
-      .pass-link a:visited{
-        font-size: 12px !important;
-        color: #777 !important;
-      }
+<style scoped>
+   
+html,
+body {
+  height: 100% !important;
+  font-family: arial !important;
+  font-weight: bold !important;
+}
+
+.Background_Image {
+  height: 100% !important;
+  background-image: url("https://cdn.allwallpaper.in/wallpapers/1920x1080/9567/fog-over-a-pine-forest-1920x1080-wallpaper.jpg");
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+}
+
+.container {
+  height: 100% !important;
+  align-content: center !important;
+}
+
+.card {
+  height: 340px;
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 400px;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  z-index: 1;
+}
+
+.social_icon span {
+  font-size: 60px;
+  margin-left: 10px;
+  color: #1976d2;
+}
+
+.card-header h3 {
+  color: white;
+  font-size: 45px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.input-group-prepend span {
+  width: 50px;
+  background-color: #1976d2;
+  color: white;
+  border: 0 !important;
+}
+
+input:focus {
+  outline: 0 0 0 0 !important;
+  box-shadow: 0 0 0 0 !important;
+}
+
+.remember {
+  color: white;
+}
+
+.remember input {
+  width: 20px;
+  height: 20px;
+  margin-left: 15px;
+  margin-right: 5px;
+}
+
+.Class_Btn_Login {
+  color: white;
+  background-color: #1976d2;
+  width: 100px;
+  font-weight: bold;
+}
+
+.Class_Btn_Login:hover {
+  color: black;
+  background-color: white;
+}
+
+.Class_Btn_Password {
+  color: white;
+  background-color: #1976d2;
+  width: 220px;
+  font-weight: bold;
+}
+
+.Class_Btn_Password:hover {
+  color: black;
+  background-color: white;
+}
+
+.links {
+  color: white;
+}
+
+.links a {
+  margin-left: 4px;
+}
 </style>
 
 

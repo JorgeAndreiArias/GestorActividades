@@ -20,21 +20,24 @@
               </select>
           </div>
           <br/>
-          <div v-if="opcion == 1 || opcion == 2" class="form-group draggable input centerh_mov" style="top: 167.5px; width: 162px; height: 64px; left: 2px;">
+          <div v-if="opcion == 1 || opcion == 2" class="form-group draggable input centerh_mov">
               <input type="text" v-model="nombre" data-validate="NNNN[]N[]NNN" placeholder="Nombre" class="form-control">
               <input type="text" v-model="apellidos" data-validate="NNNN[]N[]NNN" placeholder="Apellidos" class="form-control">
           </div>
-          <div v-if="opcion == 3" class="form-group draggable input centerh_mov" style="top: 167.5px; width: 162px; height: 64px; left: 2px;">
+          <div v-if="opcion == 3" class="form-group draggable input centerh_mov">
               <input type="date" v-model="fechaInit" data-validate="NNNN[]N[]NNN" placeholder="Fecha Inicial" class="form-control">
               <input type="date" v-model="fechaFin" data-validate="NNNN[]N[]NNN" placeholder="Fecha Final" class="form-control">
           </div>
-          <div v-if="opcion == 4" class="form-group draggable input centerh_mov" style="top: 167.5px; width: 162px; height: 64px; left: 2px;">
+          <div v-if="opcion == 4" class="form-group draggable input centerh_mov" >
               <input type="text" v-model="id" data-validate="NNNN[]N[]NNN" placeholder="Folio de Solicitud" class="form-control">
           </div>
           <input v-if="opcion != -1" type="button" value="Enviar Datos" v-on:click="sendData">
         </div> 
-    <div v-if="loadsolicitudes != null" class="draggable centerh_mov" style="top: 296.632px; width: 1006px; height: 398px; left: 7px;">
-      <table class="ui celled table draggable" style="top: 55px; left: 5px; width: 989px; height: 118px;">
+        <br/>
+    <div v-if="loadsolicitudes != null" class="draggable centerh_mov" >
+
+      <br/><br/><br/><br/>
+      <table class="ui celled table draggable" >
         <thead>
           <tr class="mg">            
             <th>ID
@@ -58,7 +61,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="mg" v-for="(solicitud, index) in loadsolicitudes" v-bind:key="solicitud">
+          <tr class="mg" v-for="solicitud in loadsolicitudes" v-bind:key="solicitud">
             <td>{{ solicitud._id }}</td>
             <td>{{ solicitud.UsuarioComun.NombreCompleto }}</td>
             <td>
@@ -88,7 +91,7 @@
             </td>
             <td>
                 <label  v-if="solicitud.ComentariosIT.length == 0" type="text" >No existen Comentarios</label>
-                <input  v-if="solicitud.ComentariosIT.length != 0" type="button" v-on:click="showComentarios(index)" value="Mostrar Comentarios">
+                <input  v-if="solicitud.ComentariosIT.length != 0" type="button" v-on:click="showComentarios(solicitud.ComentariosIT)" value="Mostrar Comentarios">
             </td>
           </tr>
         </tbody>
@@ -105,7 +108,6 @@
       </div>
       <button type="button" class="btn btn-danger draggable centerh_mov" style="top: 162.5px; width: 70px; height: 30px; left: 4px;" onclick="OcultarMostrarComentarios();">Cerrar
       </button>
-      <p>{{ opcion }}</p>
     </div> 
     </div>
 </template>
@@ -154,17 +156,32 @@ export default {
         console.log(typeof(this.opcion));
         switch (this.opcion){
           case "1": 
-          console.log("UsuarioComun");
-          this.solicitudesPorComunUsuario();
+            if(this.apellidos != null && this.apellidos != "" && this.nombre != null && this.nombre != ""){
+              this.solicitudesPorComunUsuario();
+            }else{
+              this.$swal('', 'Introduzca Nombre y Apellidos del Usuario', 'warning');
+            }
             break;
           case "2": 
-          this.solicitudesPorUsuarioIT();
+            if(this.apellidos != null && this.apellidos != "" && this.nombre != null && this.nombre != ""){
+              this.solicitudesPorUsuarioIT();
+            }else{
+                this.$swal('', 'Introduzca Nombre y Apellidos del Usuario de IT', 'warning');
+            }
             break;
           case "3": 
-          this.solicitudesPorRangoFechas();
+            if(this.fechaInit != null && this.fechaInit != "" && this.fechaFin != null && this.fechaFin != ""){
+              this.solicitudesPorRangoFechas();
+            }else{
+              this.$swal('', 'Introduzca una Fecha Inicial y una Fecha Final', 'warning');
+            }
             break;
           case "4":
-            this.solicitudesPorId();
+            if(this.id != null && this.id != ""){
+              this.solicitudesPorId();
+            }else{
+              this.$swal('', 'Introduzca el Folio de la Solicitud', 'warning');
+            }
             break;
         }
       },

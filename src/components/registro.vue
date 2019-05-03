@@ -1,15 +1,84 @@
 <template>
+    <div class="Background_Image">
     <div class="container">
-    <h1>Sign in </h1>
-        <form action="#" v-on:submit.prevent="submit1" method="POST">
-            <input type="text" placeholder="name" v-model="name" class="field">
-            <input type="text" placeholder="last name" v-model="lastname" class="field">
-            <input type="password" placeholder="password" v-model="password" class="field">
-            <input type="password" placeholder="password again" v-model="passwordagain" class="field">
-            <input type="text" placeholder="email" v-model="email" class="field">
-            <input type="submit" value="sign in" class="btn">
-        </form>
+      <div class="d-flex justify-content-center h-100">
+        <div class="card">
+          <div class="card-header">
+            <h3>Sign Up</h3>
+          </div>
+          <div class="card-body">
+            <form v-on:submit.prevent="submit1" method="POST">
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-user"></i>
+                  </span>
+                </div>
+                <input type="text" class="form-control" placeholder="Name" v-model="name">
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-user"></i>
+                  </span>
+                </div>
+                <input type="text" class="form-control" placeholder="Last Name" v-model="lastname">
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-key"></i>
+                  </span>
+                </div>
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="Password"
+                  v-model="password"
+                >
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-key"></i>
+                  </span>
+                </div>
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="Confirm Password"
+                  v-model="passwordagain"
+                >
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </div>
+                <input type="text" class="form-control" placeholder="Email" v-model="email">
+              </div>
+              <div class="form-group">
+                <input
+                  id="btnIdLogin"
+                  type="submit"
+                  value="Sign Up"
+                  class="btn float-right Class_Btn_Login"
+                >
+              </div>
+            </form>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-center links">
+              Have an account?
+              <a v-on:click="login" href="#">Login</a>
+            </div>
+          </div>
+          <div class="form-group"></div>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -18,7 +87,7 @@ import sha256 from 'sha256';
 
 
     export default{
-        data: {
+        data: { 
             name: null,
             password: null,
             lastname: null, 
@@ -41,6 +110,9 @@ import sha256 from 'sha256';
             },             
         },
         methods: {
+            login(){
+                this.$store.commit('change', 1);
+            },
             checkForm(){
               var error = ""
               console.log(error);
@@ -103,70 +175,102 @@ import sha256 from 'sha256';
     }   
 </script>
 
+<style scoped>
+html,
+body {
+  height: 100% !important;
+  font-family: arial;
+  font-weight: bold;
+}
 
-<style>
- *{
-        box-sizing: border-box;
-      }
-      body{
-        background-color: #3498DB;
-        font-family: "Arial", sans-serif;
-        padding: 50px;
-      }
-      .container{
-        margin: 20px auto;
-        padding: 10px;
-        width: 300px;
-        height: 380px;
-        background-color: #fff;
-        border-radius: 5px;
-      }
-      h1{
-        width: 70%;
-        color: #777;
-        font-size: 32px;
-        margin: 28px auto;
-        margin-bottom: 20px;
-        text-align: center;
-        /*padding-top: 40px;*/
-      }
-      form{
-        /*padding: 15px;*/
-        text-align: center;
-      }
-      input{
-        padding: 10px 0;
-        margin-bottom: 15px;
-        border-radius: 10px;
-        border: 2px solid transparent;
-        text-align: center;
-        width: 90%;
-        font-size: 16px;
-        transition: border .2s, background-color .2s;
-      }
-      form .field{
-        background-color: #ECF0F1;
-      }
-      form .field:focus {
-        border: 2px solid #3498DB;
-      }
-      form .btn{
-        background-color: #3498DB;
-        color: #fff;
-        line-height: 10px;
-        cursor: pointer;
-      }
-      form .btn:hover,
-      form .btn:active {
-        background-color: #1F78B4;
-        border: 2px solid #1F78B4;
-      }
-      .pass-link{
-        text-align: center;
-      }
-      .pass-link a:link,
-      .pass-link a:visited{
-        font-size: 12px;
-        color: #777;
-      }
+.Background_Image {
+  height: 100% !important;
+  background-image: url("https://img.wallpapersafari.com/desktop/1920/1080/41/32/27kXHj.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover !important;
+  
+}
+
+.container {
+  height: 100% !important;
+  align-content: center;
+}
+
+.card {
+  height: 520px;
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 400px;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  z-index: 1;
+}
+
+.social_icon span {
+  font-size: 60px;
+  margin-left: 10px;
+  color: #FFA000;
+}
+
+.card-header h3 {
+  color: white;
+  font-size: 45px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.input-group-prepend span {
+  width: 50px;
+  background-color: #FFA000;
+  color: white;
+  border: 0 !important;
+}
+
+input:focus {
+  outline: 0 0 0 0 !important;
+  box-shadow: 0 0 0 0 !important;
+}
+
+.remember {
+  color: white;
+}
+
+.remember input {
+  width: 20px;
+  height: 20px;
+  margin-left: 15px;
+  margin-right: 5px;
+}
+
+.Class_Btn_Login {
+  color: white;
+  background-color: #FFA000;
+  width: 100px;
+  font-weight: bold;
+}
+
+.Class_Btn_Login:hover {
+  color: black;
+  background-color: white;
+}
+
+.Class_Btn_Password {
+  color: white;
+  background-color: #FFA000;
+  width: 220px;
+  font-weight: bold;
+}
+
+.Class_Btn_Password:hover {
+  color: black;
+  background-color: white;
+}
+
+.links {
+  color: white;
+}
+
+.links a {
+  margin-left: 4px;
+}
 </style>

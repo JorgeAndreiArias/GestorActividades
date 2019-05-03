@@ -8,12 +8,17 @@ export const store = new Vuex.Store({
         page: 1,
         user: {},
         auth: {},
-        solicitudes: []
+        solicitudes: [],
+        showModal: false,
+        comentarios: [],
     },
     mutations: {
         change(state, page) {
             state.page = page;
         }, 
+        setModal(state, showModal){
+            state.showModal = showModal;
+        },
         user(state, user){
             state.user = user;
         },
@@ -22,6 +27,9 @@ export const store = new Vuex.Store({
         },
         solicitudes(state, solicitudes){
             state.solicitudes =  solicitudes
+        },
+        setComentario(state, comentarios){
+            state.comentarios = solicitudes
         }
     },
     getters: {
@@ -29,5 +37,7 @@ export const store = new Vuex.Store({
         user: state => state.user,
         auth: state => state.auth,
         solicitudes: state => state.solicitudes,
+        getComentarios: state => state.comentarios,
+        getModal: state => state.showModal,
     }
 })

@@ -22,7 +22,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(solicitud, index) in loadsolicitudes" v-bind:key="solicitud">
+                <tr v-for="(solicitud) in loadsolicitudes" v-bind:key="solicitud">
                     <th>{{ solicitud._id}}</th>
                     <th> 
                         <label v-if="solicitud.FechaCreacion != null && solicitud.FechaEnProceso == null">Pendiente</label>
@@ -40,11 +40,11 @@
                         <label v-if="solicitud.UsuarioIT.IdUsuarioIT != -1">{{ olicitud.UsuarioIT.NombreCompleto }}</label>
                     </th>
                     <th>
-                        <input  v-if="solicitud.ComentariosIT.length == 0" type="text" value="No existen comentarios">
-                        <input  v-if="solicitud.ComentariosIT.length != 0" type="button" v-on:click="showComentarios(index)" value="Mostrar Comentarios">
+                        <label  v-if="solicitud.ComentariosIT.length == 0" >No hay Comentarios</label>
+                        <input  v-if="solicitud.ComentariosIT.length != 0" type="button" v-on:click="showComentarios(solicitud.ComentariosIT)" value="Mostrar Comentarios">
                     </th>
                     <th>
-                        <input  v-if="solicitud.RutaDocumento == null" type="text" value="No existe archivo">
+                        <label  v-if="solicitud.RutaDocumento == null">No existe archivo</label>
                         <input v-on:click="ShowDoc(solicitud.RutaDocumento)"  v-if="solicitud.RutaDocumento != null" type="button" value="Mostrar archivo">
                     </th> 
                 </tr>
@@ -57,7 +57,9 @@
       </div>
       
     </v-div> 
-     
+     <div >
+         <modal ></modal>
+     </div>
     <v-div class="draggable centerh_mov" style="top: 496px; width: 460px; height: 51px; left: 2px;">
         <span class="label label-success draggable centerh_mov" style="top: 0px; font-size: 30px;">Nueva Solicitud
         </span>
@@ -97,8 +99,12 @@
 
 <script>
 import axios from 'axios';
+import modal from './comentarios.vue'
 
 export default {
+    componets:{
+        modal
+    },
     mounted: function(){
         this.getData();
     },
@@ -108,6 +114,7 @@ export default {
         status: "",
         priority: 4,
         comentarios: [],
+        showModal: false,
     }, 
     computed:{
         loadsolicitudes(){
@@ -144,10 +151,9 @@ export default {
         ShowDoc(url){
             window.open(url);
         },
-        showComentarios(id){
-            var soli =  this.$store.getters.solicitudes;
-            self = this;
-            self.comentarios = soli.ComentariosIT;
+        showComentarios(comentarios){
+            this.$store.commit('setComentarios', comentarios);
+            this.$store.commit('setModal', true);
         },
         createSolicitud(){
             var user = this.$store.getters.user;
